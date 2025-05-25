@@ -1,0 +1,43 @@
+/* DigiVote - Student Voting System CSS */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.candidate-img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.candidate-img-placeholder {
+    height: 200px;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+}
+
+.card {
+    transition: transform 0.3s;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.form-check {
+    margin-top: 10px;
+}
+
+footer {
+    margin-top: 50px;
+}
