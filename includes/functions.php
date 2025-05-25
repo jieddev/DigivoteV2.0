@@ -277,11 +277,20 @@ function getElectionResults() {
 function getTotalVotes() {
     global $conn;
     
-    $query = "SELECT COUNT(*) as total FROM votes";
-    $result = $conn->query($query);
-    $row = $result->fetch_assoc();
-    
-    return $row['total'];
+    try {
+        $query = "SELECT COUNT(*) as total FROM votes";
+        $result = $conn->query($query);
+        
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return (int)$row['total'];
+        }
+        
+        return 0;
+    } catch (Exception $e) {
+        error_log("Error getting total votes: " . $e->getMessage());
+        return 0;
+    }
 }
 
 /**
@@ -292,11 +301,20 @@ function getTotalVotes() {
 function getTotalVoters() {
     global $conn;
     
-    $query = "SELECT COUNT(DISTINCT student_id) as total FROM votes";
-    $result = $conn->query($query);
-    $row = $result->fetch_assoc();
-    
-    return $row['total'];
+    try {
+        $query = "SELECT COUNT(DISTINCT student_id) as total FROM votes";
+        $result = $conn->query($query);
+        
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return (int)$row['total'];
+        }
+        
+        return 0;
+    } catch (Exception $e) {
+        error_log("Error getting total voters: " . $e->getMessage());
+        return 0;
+    }
 }
 
 /**

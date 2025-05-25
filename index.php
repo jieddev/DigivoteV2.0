@@ -26,7 +26,8 @@ foreach ($candidates as $candidate) {
 
 // Handle vote submission
 $voteMessage = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$hasVoted) {
+$votingEnabled = isElectionActive();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$hasVoted && $votingEnabled) {
     // Validate that all positions have a selection
     $selectedCandidates = $_POST['candidate_id'] ?? [];
     $allPositionsSelected = true;
@@ -107,10 +108,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$hasVoted) {
                     <div class="card-body">
                         <?php echo $voteMessage; ?>
                         
-                        <?php if ($hasVoted): ?>
+                        <?php if (!$votingEnabled): ?>
+                            <div class="alert alert-warning">
+                                Voting is currently not active. The election period is from <?php echo date('F j, Y', strtotime(ELECTION_START_DATE)); ?> to <?php echo date('F j, Y', strtotime(ELECTION_END_DATE)); ?>.
+                            </div>
+                        <?php elseif ($hasVoted): ?>
                             <div class="alert alert-info">
                                 You have already cast your vote. Thank you for participating!
                                 <p class="mt-2"><a href="results.php" class="btn btn-primary">View Results</a></p>
+                            </div>
+                        <?php elseif (empty($positionGroups)): ?>
+                            <div class="alert alert-warning">
+                                There are no candidates available for voting at this time.
                             </div>
                         <?php else: ?>
                             <h5>Please select one candidate for each position:</h5>
@@ -144,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$hasVoted) {
                                                         <?php endif; ?>
                                                         <p class="card-text small"><?php echo htmlspecialchars($candidate['description']); ?></p>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="candidate_id[<?php echo htmlspecialchars($position); ?>]" value="<?php echo $candidate['id']; ?>" id="candidate<?php echo $candidate['id']; ?>" required>
+                                                            <input class="form-check-input" type="radio" name="candidate_id[<?php echo htmlspecialchars($position); ?>]" value="<?php echo $candidate['id']; ?>" id="candidate<?php echo $candidate['id']; ?>" <?php echo (isset($_POST['candidate_id'][$position]) && $_POST['candidate_id'][$position] == $candidate['id']) ? 'checked' : ''; ?> required>
                                                             <label class="form-check-label" for="candidate<?php echo $candidate['id']; ?>">
                                                                 Select this candidate
                                                             </label>

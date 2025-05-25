@@ -13,6 +13,10 @@ if (!isset($_SESSION['admin_id'])) {
 $totalVotes = getTotalVotes();
 $totalVoters = getTotalVoters();
 
+// If there's no data yet, initialize with zeros to avoid null values
+if ($totalVotes === null) $totalVotes = 0;
+if ($totalVoters === null) $totalVoters = 0;
+
 // Get all candidates with vote counts
 $candidates = getElectionResults();
 
@@ -115,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         <div class="card bg-primary text-white">
                             <div class="card-body">
                                 <h5 class="card-title">Total Votes</h5>
-                                <h2 class="card-text"><?php echo $totalVotes; ?></h2>
+                                <h2 class="card-text"><?php echo number_format($totalVotes); ?></h2>
                             </div>
                         </div>
                     </div>
@@ -123,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         <div class="card bg-success text-white">
                             <div class="card-body">
                                 <h5 class="card-title">Total Voters</h5>
-                                <h2 class="card-text"><?php echo $totalVoters; ?></h2>
+                                <h2 class="card-text"><?php echo number_format($totalVoters); ?></h2>
                             </div>
                         </div>
                     </div>
